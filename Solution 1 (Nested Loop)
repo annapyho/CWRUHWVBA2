@@ -1,0 +1,36 @@
+Sub NestedLoopt()
+    'this solution will take hours if not days for huge dataset
+
+'Find the last row number in Column A and return value to Cell H2
+Dim LastRow As Long
+LastRow = ActiveSheet.Cells(ActiveSheet.Rows.Count, 1).End(xlUp).Row
+Range("H2").Value = LastRow
+ 
+'Find all unique values in Column A and return them to column I
+Range("A1:A" & LastRow).AdvancedFilter Action:=xlFilterCopy, CopyToRange:=Range("I1"), Unique:=True
+ 
+ 'compare value in ticker table - column I to value in column A, if true
+ 'add value in column G
+   Dim ticker As String
+   Dim uniqueticker As String
+   Dim vol As Double
+   Dim SumNum() As Double
+   ReDim SumNum(2 To 8)
+   
+'Find the last row number in Column I and return value to Cell H3
+LastTickerRow = ActiveSheet.Cells(ActiveSheet.Rows.Count, 9).End(xlUp).Row
+Range("H3").Value = LastTickerRow   
+   For i = 2 To LastTickerRow
+    For a = 2 To LastRow
+      
+        ticker = Cells(a, 1).Value
+        uniqueticker = Cells(i, 9).Value
+        vol = Cells(a, 7).Value
+            If ticker = uniqueticker Then
+            SumNum(i) = SumNum(i) + vol
+            End If
+    Next a
+    Cells(i, 10).Value = SumNum(i)
+   Next i
+   
+End Sub
