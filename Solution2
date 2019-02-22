@@ -1,0 +1,48 @@
+Sub StockSummaryAllWorksheets()
+
+'Loop thru all worksheets
+
+'Dim ws As Worksheet          ==================================
+'For Each ws In Worksheets ==>||!!Worksheets loop did't work!!||
+'                             ==================================
+
+'Find the last row number and return value to Cell H2
+
+Dim LastRow As Long
+LastRow = ActiveSheet.Cells(ActiveSheet.Rows.Count, 1).End(xlUp).Row
+Range("H2").Value = LastRow
+
+'Find all unique values in Column A and return them to column I
+Range("A1:A" & LastRow).AdvancedFilter Action:=xlFilterCopy, CopyToRange:=Range("I1"), Unique:=True
+
+'Find the last row number in the unique ticker column and return value to Cell H3
+
+'Variables declaration
+Dim Ticker As String
+Dim Rng As Range
+Dim TickTol As Double
+
+'Find the last row number in the unique ticker column and return value to Cell H3
+LastTickerRow = ActiveSheet.Cells(ActiveSheet.Rows.Count, 9).End(xlUp).Row
+Range("H3").Value = LastTickerRow
+
+'Loop through all unique tickers
+'Filter data to show one ticker at a time in Column I (with unique tickers)
+
+   For k = 2 To LastTickerRow
+   Ticker = Cells(k, 9).Value
+   Range("A1:A" & LastRow).AutoFilter Field:=1, Criteria1:=Ticker
+
+'Set the range to visible cells only
+    Set Rng = Range("G:G").SpecialCells(xlCellTypeVisible)
+
+'Sum up volume for each ticker and return volume next to the corresponding ticker
+    TickTol = WorksheetFunction.Sum(Rng)
+    Cells(k, 10).Value = TickTol
+    ActiveSheet.ShowAllData
+    Next k
+
+'Next ws
+
+End Sub
+
